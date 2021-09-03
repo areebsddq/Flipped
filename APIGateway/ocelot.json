@@ -1,0 +1,28 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/hub",
+            "DownStreamScheme": "http",
+            "DownStreamHostsAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": "10"
+                }
+            ],
+            "UpstreamPathTemplate": "/hub",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/hub/{id}",
+            "DownStreamScheme": "http",
+            "DownStreamHostsAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": "10"
+                }
+            ],
+            "UpstreamPathTemplate": "/hub/{id}",
+            "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ]
+        }
+    ]
+}
