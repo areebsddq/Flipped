@@ -9,6 +9,8 @@ namespace HubService.Database.Entitties
         [Key]
         public int Id { get; set; }
 
+        public int HubId { get; set; }
+
         [Column(TypeName="varchar(20)")]
         public string Title { get; set; }
 

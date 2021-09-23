@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HubService.Database;
 using HubService.Database.Entitties;
+using System.Collections.Generic;
 
 namespace HubService.Controllers
 {
-    [Route("api/hub/")]
+    [Route("api/hub")]
     [ApiController]
     public class LessonsController : ControllerBase
     {
@@ -19,22 +20,21 @@ namespace HubService.Controllers
         }
 
         [HttpGet("{hubId}/lessons")]
-        public async Task<ActionResult<Lesson>> GetLessons(int id)
+        public IEnumerable<Lesson> GetLessons(int hubId)
         {
-            var lesson = await _context.Lesson.FindAsync(id);
+            return _context.Lessons.Where(l => l.HubId == hubId);
+        }
 
-            if (lesson == null)
-            {
-                return NotFound();
-            }
-
-            return lesson;
+        [HttpGet("lesson/{id}")]
+        public Lesson GetLesson(int id)
+        {
+            return _context.Lessons.FirstOrDefault(l => l.Id == id);
         }
 
         [HttpPut("lesson/{id}")]
-        public async Task<IActionResult> PutLesson(int id, Lesson lesson)
+        public async Task<IActionResult> PutLesson(int id, [FromBody] Lesson lesson)
         {
-            if (id != lesson.Id)
+            if (id != lesson.Id || !LessonExists(id))
             {
                 return BadRequest();
             }
@@ -60,10 +60,15 @@ namespace HubService.Controllers
             return NoContent();
         }
 
-        [HttpPost("{hubId}/lesson")]
+        [HttpPost("lesson")]
         public async Task<ActionResult<Lesson>> PostLesson(Lesson lesson)
         {
-            _context.Lesson.Add(lesson);
+            if (!HubExists(lesson.HubId))
+            {
+                return BadRequest();
+            }
+
+            _context.Lessons.Add(lesson);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetLesson", new { id = lesson.Id }, lesson);
@@ -72,13 +77,13 @@ namespace HubService.Controllers
         [HttpDelete("lesson/{id}")]
         public async Task<IActionResult> DeleteLesson(int id)
         {
-            var lesson = await _context.Lesson.FindAsync(id);
+            var lesson = await _context.Lessons.FindAsync(id);
             if (lesson == null)
             {
                 return NotFound();
             }
 
-            _context.Lesson.Remove(lesson);
+            _context.Lessons.Remove(lesson);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -86,7 +91,12 @@ namespace HubService.Controllers
 
         private bool LessonExists(int id)
         {
-            return _context.Lesson.Any(e => e.Id == id);
+            return _context.Lessons.Any(e => e.Id == id);
+        }
+
+        private bool HubExists(int id)
+        {
+            return _context.Hubs.Any(e => e.Id == id);
         }
     }
 }

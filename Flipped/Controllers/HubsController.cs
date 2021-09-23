@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HubService.Database;
@@ -41,7 +40,7 @@ namespace HubService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHub(int id, Hub hub)
+        public async Task<IActionResult> PutHub(int id, [FromBody] Hub hub)
         {
             if (id != hub.Id)
             {
@@ -70,7 +69,7 @@ namespace HubService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Hub>> PostHub(Hub hub)
+        public async Task<ActionResult<Hub>> PostHub([FromBody] Hub hub)
         {
             _context.Hubs.Add(hub);
             await _context.SaveChangesAsync();

@@ -6,7 +6,7 @@
             "DownStreamHostsAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "10"
+                    "Port": "5000"
                 }
             ],
             "UpstreamPathTemplate": "/hub",
@@ -18,7 +18,7 @@
             "DownStreamHostsAndPorts": [
                 {
                     "Host": "localhost",
-                    "Port": "10"
+                    "Port": "5000"
                 }
             ],
             "UpstreamPathTemplate": "/hub/{id}",

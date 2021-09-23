@@ -7,11 +7,30 @@ namespace HubService.Database
     {
         public DbSet<Hub> Hubs { get; set; }
 
+        public DbSet<Lesson> Lessons { get; set; }
+
+        public DbSet<Project> Projects { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
 
         }
 
-        public DbSet<HubService.Database.Entitties.Lesson> Lesson { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            /*
+            modelBuilder.Entity<Hub>()
+                .HasMany<Lesson>()
+                .WithOne();
+
+            modelBuilder.Entity<Hub>()
+                .Navigation(b => b.Lessons)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+        */
+            modelBuilder.Entity<Lesson>()
+            .HasOne<Hub>()
+            .WithMany()
+            .HasForeignKey(p => p.HubId);
+        }
     }
 }
