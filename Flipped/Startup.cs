@@ -6,6 +6,7 @@ using HubService.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,8 @@ namespace Flipped
 
             services.AddCors();
 
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
+
             services.AddDbContext<DatabaseContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
         }
@@ -61,8 +64,9 @@ namespace Flipped
                     .WithOrigins(
                            "http://localhost:4200", 
                            "http://localhost:5000/")
-                    .WithHeaders()
-                    .AllowAnyMethod());
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
 
 
             app.UseRouting();
